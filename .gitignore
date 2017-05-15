@@ -29,5 +29,5 @@
 *.app
  
  #build folder
- _build/
+_build/
 _build/*
