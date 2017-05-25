@@ -56,7 +56,7 @@
 #include "nrf_delay.h"
 
 #define ADVERTISING_LED_PIN_NO               BSP_LED_0                                              /**< Is on when device is advertising. */
-#define CONNECTED_LED_PIN_NO                 BSP_LED_1                                              /**< Is on when device has connected. */
+#define CONNECTED_LED_PIN_NO                 7                                              /**< Is on when device has connected. */
 
 #define DEVICE_NAME                          "DfuTarg"                                              /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                    "NordicSemiconductor"                                  /**< Manufacturer. Will be passed to Device Information Service. */
@@ -91,6 +91,7 @@
 #define NRF_BLE_MAX_MTU_SIZE            GATT_MTU_SIZE_DEFAULT                                       /**< MTU size used in the softdevice enabling and to reply to a BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST event. */
 #endif
 
+uint8_t                     m_connect_flag = 0;
 
 static ble_dfu_t            m_dfu;                                                                   /**< Structure used to identify the Device Firmware Update service. */
 static uint16_t             m_pkt_notif_target;                                                      /**< Number of packets of firmware data to be received before transmitting the next Packet Receipt Notification to the DFU Controller. */
@@ -618,9 +619,9 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
         case BLE_GAP_EVT_CONNECTED:
             nrf_gpio_pin_clear(CONNECTED_LED_PIN_NO);
             nrf_gpio_pin_set(ADVERTISING_LED_PIN_NO);
-
             m_conn_handle    = p_ble_evt->evt.gap_evt.conn_handle;
             m_flags &= ~DFU_BLE_FLAG_IS_ADVERTISING;
+            m_connect_flag = 1;
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
@@ -629,7 +630,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             APP_ERROR_CHECK(err_code);
 
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
-
+            m_connect_flag = 0;
             break;
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:

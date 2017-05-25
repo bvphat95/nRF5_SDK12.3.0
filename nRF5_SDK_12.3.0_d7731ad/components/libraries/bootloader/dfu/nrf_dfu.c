@@ -57,7 +57,9 @@
 
 #define APP_TIMER_PRESCALER             0                                                       /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE         4                                                       /**< Size of timer operation queues. */
+#define APP_TIMEOUT_ADV_IN_SECONDS      5
 
+APP_TIMER_DEF(dfu_timer);
 // Weak function implementation
 
 /** @brief Weak implemenation of nrf_dfu_check_enter.
@@ -67,31 +69,55 @@
  */
 __WEAK bool nrf_dfu_enter_check(void)
 {
+    uint32_t gpregret = NRF_POWER->GPREGRET;
+    NRF_LOG_INFO("DFU checking: 0x%02X \n",gpregret);
     if (nrf_gpio_pin_read(BOOTLOADER_BUTTON) == 0)
     {
         return true;
     }
-
-    if (s_dfu_settings.enter_buttonless_dfu == 1)
-    {
-        s_dfu_settings.enter_buttonless_dfu = 0;
-        APP_ERROR_CHECK(nrf_dfu_settings_write(NULL));
+    if(gpregret == 0){
+        NRF_POWER->GPREGRET = 1;
         return true;
+    }else{
+        NRF_POWER->GPREGRET = 0;
+        return false;
     }
-    return false;
+
+//    if (s_dfu_settings.enter_buttonless_dfu == 1)
+//    {
+//        s_dfu_settings.enter_buttonless_dfu = 0;
+//        APP_ERROR_CHECK(nrf_dfu_settings_write(NULL));
+//        return true;
+//    }
+//    return false;
+    
 }
 
 
 // Internal Functions
-
+/**@brief Function for handler the timer module events(app_timer).
+ */
+static void dfu_timer_handler(void * p_context)
+{
+    static int count = 0;
+    count++;
+    if (count >= APP_TIMEOUT_ADV_IN_SECONDS) {
+        if(m_connect_flag == 0)(void)sd_nvic_SystemReset();
+        else count = 0;
+    }
+}
 /**@brief Function for initializing the timer handler module (app_timer).
  */
 static void timers_init(void)
 {
     // Initialize timer module, making it use the scheduler.
+    uint32_t err_code;
     APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);
+    err_code = app_timer_create(&dfu_timer,APP_TIMER_MODE_REPEATED,dfu_timer_handler);
+    APP_ERROR_CHECK(err_code);
+    err_code = app_timer_start(dfu_timer,APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER),NULL);
+    APP_ERROR_CHECK(err_code);
 }
-
 
 /** @brief Function for event scheduler initialization.
  */
@@ -117,7 +143,6 @@ void nrf_dfu_wait()
     app_sched_execute();
 }
 
-
 uint32_t nrf_dfu_init()
 {
     uint32_t ret_val = NRF_SUCCESS;
@@ -126,7 +151,6 @@ uint32_t nrf_dfu_init()
     NRF_LOG_INFO("In real nrf_dfu_init\r\n");
 
     nrf_dfu_settings_init();
-
     // Continue ongoing DFU operations
     // Note that this part does not rely on SoftDevice interaction
     ret_val = nrf_dfu_continue(&enter_bootloader_mode);
@@ -148,7 +172,6 @@ uint32_t nrf_dfu_init()
     {
         timers_init();
         scheduler_init();
-
         // Initializing transports
         ret_val = nrf_dfu_transports_init();
         if (ret_val != NRF_SUCCESS)
@@ -170,7 +193,6 @@ uint32_t nrf_dfu_init()
         NRF_LOG_INFO("Jumping to: 0x%08x\r\n", MAIN_APPLICATION_START_ADDR);
         nrf_bootloader_app_start(MAIN_APPLICATION_START_ADDR);
     }
-
     // Should not be reached!
     NRF_LOG_INFO("After real nrf_dfu_init\r\n");
     return NRF_SUCCESS;

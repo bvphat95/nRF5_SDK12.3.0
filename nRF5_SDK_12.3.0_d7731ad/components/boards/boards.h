@@ -180,12 +180,12 @@ uint32_t bsp_board_button_idx_to_pin(uint32_t button_idx);
 
 #define BSP_BOARD_LED_0 0
 #define BSP_BOARD_LED_1 1
-#define BSP_BOARD_LED_2 2
+#define BSP_BOARD_LED_2 7
 #define BSP_BOARD_LED_3 3
 #define BSP_BOARD_LED_4 4
 #define BSP_BOARD_LED_5 5
 #define BSP_BOARD_LED_6 6
-#define BSP_BOARD_LED_7 7
+#define BSP_BOARD_LED_7 2
 
 #ifdef BSP_LED_0
 #define BSP_LED_0_MASK (1<<BSP_LED_0)

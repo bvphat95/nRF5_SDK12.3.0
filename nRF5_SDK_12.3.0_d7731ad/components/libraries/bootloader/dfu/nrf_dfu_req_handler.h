@@ -194,6 +194,7 @@ uint32_t nrf_dfu_req_handler_init(void);
  */
 nrf_dfu_res_code_t nrf_dfu_req_handler_on_req(void * p_context, nrf_dfu_req_t * p_req, nrf_dfu_res_t * p_res);
 
+extern uint8_t m_connect_flag;
 
 #ifdef __cplusplus
 }
