@@ -58,8 +58,8 @@
 #define ADVERTISING_LED_PIN_NO               BSP_LED_0                                              /**< Is on when device is advertising. */
 #define CONNECTED_LED_PIN_NO                 7                                              /**< Is on when device has connected. */
 
-#define DEVICE_NAME                          "DfuTarg"                                              /**< Name of device. Will be included in the advertising data. */
-#define MANUFACTURER_NAME                    "NordicSemiconductor"                                  /**< Manufacturer. Will be passed to Device Information Service. */
+#define DEVICE_NAME                          "DFU_LL"                                              /**< Name of device. Will be included in the advertising data. */
+#define MANUFACTURER_NAME                    "VNG"                                  /**< Manufacturer. Will be passed to Device Information Service. */
 
 #define MIN_CONN_INTERVAL                    (uint16_t)(MSEC_TO_UNITS(15, UNIT_1_25_MS))            /**< Minimum acceptable connection interval. */
 #define MAX_CONN_INTERVAL_MS                 30                                                     /**< Maximum acceptable connection interval in milliseconds. */

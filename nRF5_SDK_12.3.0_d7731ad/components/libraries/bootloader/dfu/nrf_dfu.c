@@ -100,10 +100,16 @@ __WEAK bool nrf_dfu_enter_check(void)
 static void dfu_timer_handler(void * p_context)
 {
     static int count = 0;
-    count++;
     if (count >= APP_TIMEOUT_ADV_IN_SECONDS) {
-        if(m_connect_flag == 0)(void)sd_nvic_SystemReset();
-        else count = 0;
+        if(m_connect_flag == 0){
+            (void)sd_nvic_SystemReset();
+        }
+        else{
+            count = 0;
+        }
+    }
+    else{
+        count++;
     }
 }
 /**@brief Function for initializing the timer handler module (app_timer).
