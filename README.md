@@ -42,7 +42,7 @@ Note:
 *bl-settings-version must be 1 for SDK 12
 
 2.2 - Merge application + softdevice + setting + bootloader with srec_cat:
-srec_cat ~/Dropbox/SDK12/app/access/door/V1/door.hex -intel ~Dropbox/SDK12/app/access/door/V1/set_ad.hex -intel ~/Dropbox/SDK12/Softdevice/s130_nrf51_2.0.1_softdevice.hex -intel ~/Dropbox/SDK12/bootloader/access/door/V1/bootloader.hex -intel -o ~/Dropbox/SDK12/app/access/door/V1/door_full.hex 
+srec_cat ~/Dropbox/SDK12/app/access/door/V1/door.hex -intel ~Dropbox/SDK12/app/access/door/V1/set_ad.hex -intel ~/Dropbox/SDK12/Softdevice/s130_nrf51_2.0.1_softdevice.hex -intel ~/Dropbox/SDK12/bootloader/access/door/V1/bootloader.hex -intel -o ~/Dropbox/SDK12/app/access/door/V1/door_full.hex -intel
 
 
 2.3 - Flash combined file to MCU
