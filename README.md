@@ -33,7 +33,7 @@ Note: Current version of nrfutil is 2.2.0 (need higher of 2.0)
 
 Command: 
 
-nrfutil settings generate --family NRF52 --application app.hex --application-version 3 --bootloader-version 2 --bl-settings-version 1 sett.hex
+nrfutil settings generate --family NRF51 --application ~/Dropbox/SDK12/app/access/door/V1/door.hex --application-version 1 --bootloader-version 1 --bl-settings-version 1 ~/Dropbox/SDK12/app/access/door/V1/set_ad.hex
 
 Note:
 
@@ -41,7 +41,9 @@ Note:
 
 *bl-settings-version must be 1 for SDK 12
 
-2.2 - Merge application + softdevice + setting + bootloader with srec_cat
+2.2 - Merge application + softdevice + setting + bootloader with srec_cat:
+srec_cat ~/Dropbox/SDK12/app/access/door/V1/door.hex -intel ~Dropbox/SDK12/app/access/door/V1/set_ad.hex -intel ~/Dropbox/SDK12/Softdevice/s130_nrf51_2.0.1_softdevice.hex -intel ~/Dropbox/SDK12/bootloader/access/door/V1/bootloader.hex -intel -o ~/Dropbox/SDK12/app/access/door/V1/door_full.hex 
+
 
 2.3 - Flash combined file to MCU
 
@@ -49,7 +51,7 @@ Note:
 
 Command:
 
-nrfutil pkg generate --hw-version 51 --sd-req 0x87 --application-version 4 --application app.hex --key-file key.pem app_dfu_package.zip
+nrfutil pkg generate --hw-version 51 --sd-req 0x87 --application-version 1 --application ~/Dropbox/SDK12/app/access/door/V1/door.hex --key-file ~/Dropbox/SDK12/key.pem ~/Dropbox/SDK12/app/access/door/V1/door.zip
 
 Note:
 
